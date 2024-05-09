@@ -6,7 +6,9 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.randrez.countriesapp.data.resource.Result
 import com.randrez.countriesapp.domain.model.ItemCountry
+import com.randrez.countriesapp.domain.useCase.GetCountriesUseCase
 import com.randrez.countriesapp.presentation.navigation.NavigationEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -16,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CountriesViewModel @Inject constructor(
-
+    private val countriesUseCase: GetCountriesUseCase
 ) : ViewModel() {
 
     private val _state: MutableState<CountriesState> = mutableStateOf(CountriesState())
@@ -29,32 +31,24 @@ class CountriesViewModel @Inject constructor(
     val navigationEventFlow: SharedFlow<NavigationEvent> = _navigationEventFlow
 
     init {
-        countries.add(
-            ItemCountry(
-                code = "MDA",
-                name = "Republic of Moldova",
-                capital = "Chișinău",
-                image = "https://flagcdn.com/w320/md.png"
-            )
-        )
-        countries.add(
-            ItemCountry(
-                code = "MDA",
-                name = "Republic of Soldova",
-                capital = "Chișinău",
-                image = "https://flagcdn.com/w320/md.png"
-            )
-        )
-        countries.add(
-            ItemCountry(
-                code = "MDA",
-                name = "Republic of Noldova",
-                capital = "Chișinău",
-                image = "https://flagcdn.com/w320/md.png"
-            )
-        )
+        viewModelScope.launch {
+            getCountries()
+        }
+    }
 
-        countriesFiltered.addAll(countries)
+    private suspend fun getCountries() {
+        countries.clear()
+        countriesFiltered.clear()
+        when (val result = countriesUseCase.invoke()) {
+            is Result.Error -> {}
+            is Result.Success -> {
+                result.data?.let { itemCountryList ->
+                    _state.value = state.value.copy(loading = false)
+                    countries.addAll(itemCountryList)
+                    countriesFiltered.addAll(itemCountryList)
+                }
+            }
+        }
     }
 
     fun onEventUI(eventUI: CountriesEventUI) {
@@ -72,7 +66,10 @@ class CountriesViewModel @Inject constructor(
             }
 
             is CountriesEventUI.OnSearchQueryCountry -> {
-                val filters = countries.filter { it.name.lowercase().contains(eventUI.value) }
+                val filters = countries.filter {
+                    it.official.lowercase().contains(eventUI.value) || it.name.lowercase()
+                        .contains(eventUI.value)
+                }
                 countriesFiltered.clear()
                 if (filters.isNotEmpty())
                     countriesFiltered.addAll(filters)

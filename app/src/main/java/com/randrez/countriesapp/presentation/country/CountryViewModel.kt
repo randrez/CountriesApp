@@ -7,7 +7,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.randrez.countriesapp.domain.model.Country
-import com.randrez.countriesapp.domain.model.ItemCountry
 import com.randrez.countriesapp.presentation.navigation.Arguments.CODE
 import com.randrez.countriesapp.presentation.navigation.Arguments.IMAGE
 import com.randrez.countriesapp.presentation.navigation.Arguments.TITLE
@@ -75,16 +74,17 @@ class CountryViewModel @Inject constructor(
     }
 
     private fun getCountryBorders(country: Country) {
+        /*
         val borders = listOf(
-            ItemCountry(code = "ROU", name = "Romania", capital = "Bucharest"),
-            ItemCountry(code = "UKR", name = "Ukraine", capital = "Kyiv"),
-            ItemCountry(code = "UKR", name = "Ukraine", capital = "Kyiv"),
-            ItemCountry(code = "UKR", name = "Ukraine", capital = "Kyiv"),
-            ItemCountry(code = "UKR", name = "Ukraine", capital = "Kyiv"),
-            ItemCountry(code = "UKR", name = "Ukraine", capital = "Kyiv")
+            ItemCountry(code = "ROU", official = "Romania", capital = "Bucharest"),
+            ItemCountry(code = "UKR", official = "Ukraine", capital = "Kyiv"),
+            ItemCountry(code = "UKR", official = "Ukraine", capital = "Kyiv"),
+            ItemCountry(code = "UKR", official = "Ukraine", capital = "Kyiv"),
+            ItemCountry(code = "UKR", official = "Ukraine", capital = "Kyiv"),
+            ItemCountry(code = "UKR", official = "Ukraine", capital = "Kyiv")
         )
         _state.value =
-            state.value.copy(country = country, borders = borders.toMutableList(), loading = false)
+            state.value.copy(country = country, borders = borders.toMutableList(), loading = false)*/
     }
 
     fun onBackStack() {

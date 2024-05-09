@@ -141,7 +141,7 @@ fun CountryScreen(state: CountryState, obBackStack: () -> Unit) {
                                             colorText = Color.White,
                                             containerColor = MaterialTheme.colorScheme.primary,
                                             code = itemCountry.code,
-                                            name = "${stringResource(id = R.string.name)} ${itemCountry.name}",
+                                            name = "${stringResource(id = R.string.name)} ${itemCountry.official}",
                                             capital = itemCountry.capital
                                         )
                                     }

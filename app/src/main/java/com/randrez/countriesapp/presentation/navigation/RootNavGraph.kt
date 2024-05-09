@@ -37,12 +37,9 @@ fun RootNavGraph(navController: NavHostController) {
 
                         is OnNavigateCountry -> {
                             val (code, name, capital, image) = event.itemCountry
-                            image?.let {
-                                val encodedUrl = encodeImage(image)
-                                navController.navigate(route = "${Country.route}/${code}/${name}/${encodedUrl}")
-                                delay(900)
-                                viewModel.clearSearch()
-                            }
+                            val encodedUrl = encodeImage(image)
+                            navController.navigate(route = "${Country.route}/${code}/${name}/${encodedUrl}")
+                            viewModel.clearSearch()
                         }
                     }
                 }
