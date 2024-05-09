@@ -29,7 +29,7 @@ class CountriesViewModel @Inject constructor(
     val navigationEventFlow: SharedFlow<NavigationEvent> = _navigationEventFlow
 
     init {
-        countriesFiltered.add(
+        countries.add(
             ItemCountry(
                 code = "MDA",
                 name = "Republic of Moldova",
@@ -37,22 +37,24 @@ class CountriesViewModel @Inject constructor(
                 image = "https://flagcdn.com/w320/md.png"
             )
         )
-        countriesFiltered.add(
+        countries.add(
             ItemCountry(
                 code = "MDA",
-                name = "Republic of Moldova",
+                name = "Republic of Soldova",
                 capital = "Chișinău",
                 image = "https://flagcdn.com/w320/md.png"
             )
         )
-        countriesFiltered.add(
+        countries.add(
             ItemCountry(
                 code = "MDA",
-                name = "Republic of Moldova",
+                name = "Republic of Noldova",
                 capital = "Chișinău",
                 image = "https://flagcdn.com/w320/md.png"
             )
         )
+
+        countriesFiltered.addAll(countries)
     }
 
     fun onEventUI(eventUI: CountriesEventUI) {
@@ -68,6 +70,27 @@ class CountriesViewModel @Inject constructor(
                     _navigationEventFlow.emit(NavigationEvent.OnBackStack)
                 }
             }
+
+            is CountriesEventUI.OnSearchQueryCountry -> {
+                val filters = countries.filter { it.name.lowercase().contains(eventUI.value) }
+                countriesFiltered.clear()
+                if (filters.isNotEmpty())
+                    countriesFiltered.addAll(filters)
+                else
+                    countriesFiltered.addAll(countries)
+
+                _state.value = state.value.copy(searchQueryCountry = eventUI.value)
+            }
+
+            is CountriesEventUI.OnClearSearchQueryCountry -> {
+                clearSearch()
+            }
         }
+    }
+
+    fun clearSearch() {
+        _state.value = state.value.copy(searchQueryCountry = "")
+        countriesFiltered.clear()
+        countriesFiltered.addAll(countries)
     }
 }

@@ -14,12 +14,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.randrez.countriesapp.R
 import com.randrez.countriesapp.domain.model.ItemCountry
 import com.randrez.countriesapp.presentation.CardItemCountry
 import com.randrez.countriesapp.presentation.countries.CountriesEventUI.OnBackStack
+import com.randrez.countriesapp.presentation.countries.CountriesEventUI.OnClearSearchQueryCountry
+import com.randrez.countriesapp.presentation.countries.CountriesEventUI.OnSearchQueryCountry
 import com.randrez.countriesapp.presentation.countries.CountriesEventUI.OnSelectCountry
 
 @Composable
@@ -36,11 +39,15 @@ fun CountriesScreen(
             SearchCountry(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 10.dp, vertical = 5.dp),
-                searchQueryCountry = "",
+                    .padding(horizontal = 15.dp, vertical = 10.dp),
+                searchQueryCountry = state.searchQueryCountry,
                 placeholder = stringResource(id = R.string.search_country),
-                onSearchQueryCountry = {},
-                onClearSearchQueryCountry = {}
+                onSearchQueryCountry = {
+                    onEventUI(OnSearchQueryCountry(it))
+                },
+                onClearSearchQueryCountry = {
+                    onEventUI(OnClearSearchQueryCountry)
+                }
             )
         }
     ) { paddingValues ->
