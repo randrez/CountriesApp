@@ -19,8 +19,6 @@ import com.randrez.countriesapp.presentation.navigation.NavigationEvent.OnNaviga
 import com.randrez.countriesapp.presentation.navigation.Routes.Countries
 import com.randrez.countriesapp.presentation.navigation.Routes.Country
 import com.randrez.countriesapp.tools.encodeImage
-import java.io.UnsupportedEncodingException
-import java.net.URLEncoder
 
 @Composable
 fun RootNavGraph(navController: NavHostController) {
@@ -38,8 +36,10 @@ fun RootNavGraph(navController: NavHostController) {
 
                         is OnNavigateCountry -> {
                             val (code, name, capital, image) = event.itemCountry
-                            val encodedUrl = encodeImage(image)
-                            navController.navigate(route = "${Country.route}/${code}/${name}/${encodedUrl}")
+                            image?.let {
+                                val encodedUrl = encodeImage(image)
+                                navController.navigate(route = "${Country.route}/${code}/${name}/${encodedUrl}")
+                            }
                         }
                     }
                 }
@@ -52,7 +52,7 @@ fun RootNavGraph(navController: NavHostController) {
         }
 
         composable(
-            route = "${Country.route}/{code}/{title}/{image}",
+            route = "${Country.route}/{${Arguments.CODE}}/{${Arguments.TITLE}}/{${Arguments.IMAGE}}",
             arguments = listOf(
                 navArgument(Arguments.CODE) {
                     type = NavType.StringType
@@ -74,7 +74,10 @@ fun RootNavGraph(navController: NavHostController) {
                     }
                 }
             }
-            CountryScreen(state = viewModel.state.value)
+            CountryScreen(
+                state = viewModel.state.value,
+                obBackStack = viewModel::onBackStack
+            )
         }
     }
 }

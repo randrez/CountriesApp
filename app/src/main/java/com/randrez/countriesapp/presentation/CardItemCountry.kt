@@ -25,7 +25,12 @@ import com.randrez.countriesapp.R
 fun CardItemCountry(
     name: String,
     capital: String,
+    code: String? = null,
     image: String? = null,
+    fontSizeName: Int = 19,
+    containerColor:Color = Color.White,
+    colorName: Color = MaterialTheme.colorScheme.primary,
+    colorText:Color = Color.Gray,
     onSelectCountry: (() -> Unit)? = null
 ) {
     ElevatedCard(
@@ -37,7 +42,7 @@ fun CardItemCountry(
                 }
             },
         colors = CardDefaults.elevatedCardColors(
-            containerColor = Color.White
+            containerColor = containerColor
         ),
         elevation = CardDefaults.elevatedCardElevation(
             defaultElevation = 5.dp
@@ -60,15 +65,22 @@ fun CardItemCountry(
                 Row {
                     Text(
                         text = name,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontSize = 19.sp
+                        color = colorName,
+                        fontSize = fontSizeName.sp
                     )
                 }
-                Spacer(modifier = Modifier.padding(10.dp))
+                code?.let {
+                    Row {
+                        Text(
+                            text = "${stringResource(id = R.string.code)} $code",
+                            color = colorText
+                        )
+                    }
+                } ?: Spacer(modifier = Modifier.padding(10.dp))
                 Row {
                     Text(
                         text = "${stringResource(id = R.string.capital)} $capital",
-                        color = Color.Gray
+                        color = colorText
                     )
                 }
             }

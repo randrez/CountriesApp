@@ -155,11 +155,10 @@ fun LoadImageInDetail(image: String) {
             Image(
                 painter = painter,
                 contentDescription = null,
-                contentScale = ContentScale.None,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(300.dp)
+                    .size(180.dp)
                     .padding(10.dp)
-
             )
         }
     }
