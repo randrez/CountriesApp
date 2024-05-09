@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">CountriesApp</string>
+    <string name="search_country">Buscar pais</string>
+    <string name="name">Nombre</string>
+    <string name="official_name">Nombre oficial:</string>
+    <string name="language">Idioma</string>
+    <string name="population">Población</string>
+    <string name="capital">Capital:</string>
+</resources>
