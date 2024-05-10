@@ -19,7 +19,6 @@ import com.randrez.countriesapp.presentation.navigation.NavigationEvent.OnNaviga
 import com.randrez.countriesapp.presentation.navigation.Routes.Countries
 import com.randrez.countriesapp.presentation.navigation.Routes.Country
 import com.randrez.countriesapp.tools.encodeImage
-import kotlinx.coroutines.delay
 
 @Composable
 fun RootNavGraph(navController: NavHostController) {
@@ -36,10 +35,12 @@ fun RootNavGraph(navController: NavHostController) {
                         }
 
                         is OnNavigateCountry -> {
-                            val (code, name, capital, image) = event.itemCountry
-                            val encodedUrl = encodeImage(image)
-                            navController.navigate(route = "${Country.route}/${code}/${name}/${encodedUrl}")
-                            viewModel.clearSearch()
+                            event.itemCountry.image?.let { image ->
+                                val encodedUrl = encodeImage(image)
+                                navController.navigate(route = "${Country.route}/${event.itemCountry.code}/${event.itemCountry.name}/${encodedUrl}")
+                                if (state.searchCountry.isNotBlank())
+                                    viewModel.clearSearch()
+                            }
                         }
                     }
                 }

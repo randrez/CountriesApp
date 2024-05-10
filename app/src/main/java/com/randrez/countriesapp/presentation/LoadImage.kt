@@ -1,12 +1,16 @@
 package com.randrez.countriesapp.presentation
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -50,7 +54,7 @@ fun LoadImageItemComponent(
                     .padding(5.dp),
                 shape = CircleShape,
                 colors = CardDefaults.cardColors(
-                    contentColor = background
+                    containerColor = background
                 ),
                 elevation = CardDefaults.elevatedCardElevation(
                     defaultElevation = 5.dp
@@ -62,7 +66,7 @@ fun LoadImageItemComponent(
                 ) {
                     CircularProgressIndicator(
                         color = MaterialTheme.colorScheme.secondary, modifier = Modifier
-                            .size(80.dp)
+                            .size(40.dp)
                             .align(Alignment.Center)
                     )
                 }
@@ -71,19 +75,32 @@ fun LoadImageItemComponent(
         }
 
         is State.Error -> {
-            Box(
-                contentAlignment = Alignment.Center, modifier = Modifier
-                    .size(80.dp)
-                    .background(background)
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Warning,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(80.dp)
-                        .align(Alignment.Center),
-                    tint = Color.Red
+            Card(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .padding(5.dp),
+                shape = CircleShape,
+                elevation = CardDefaults.elevatedCardElevation(
+                    defaultElevation = 5.dp
+                ),
+                colors = CardDefaults.cardColors(
+                    containerColor = background
                 )
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center, modifier = Modifier
+                        .size(80.dp)
+                        .background(background)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Warning,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(80.dp)
+                            .align(Alignment.Center),
+                        tint = Color.Red
+                    )
+                }
             }
         }
 
@@ -95,6 +112,9 @@ fun LoadImageItemComponent(
                 shape = CircleShape,
                 elevation = CardDefaults.elevatedCardElevation(
                     defaultElevation = 5.dp
+                ),
+                colors = CardDefaults.cardColors(
+                    containerColor = background
                 )
             ) {
                 Image(
@@ -155,10 +175,11 @@ fun LoadImageInDetail(image: String) {
             Image(
                 painter = painter,
                 contentDescription = null,
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.FillBounds,
                 modifier = Modifier
-                    .size(180.dp)
-                    .padding(10.dp)
+                    .border(BorderStroke(1.dp, Color.DarkGray))
+                    .width(300.dp)
+                    .height(100.dp)
             )
         }
     }

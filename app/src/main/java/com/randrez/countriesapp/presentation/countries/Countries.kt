@@ -11,11 +11,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.randrez.countriesapp.R
 import com.randrez.countriesapp.domain.model.ItemCountry
 import com.randrez.countriesapp.presentation.CardItemCountry
@@ -39,7 +43,7 @@ fun CountriesScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 15.dp, vertical = 10.dp),
-                searchQueryCountry = state.searchQueryCountry,
+                searchQueryCountry = state.searchCountry,
                 placeholder = stringResource(id = R.string.search_country),
                 onSearchQueryCountry = {
                     onEventUI(OnSearchQueryCountry(it))
@@ -61,10 +65,21 @@ fun CountriesScreen(
                         .size(80.dp)
                         .align(Alignment.Center)
                 )
-            else
+            else if (countries.isNotEmpty()) {
                 CountryList(countries) {
                     onEventUI(OnSelectCountry(it))
                 }
+            } else {
+                Text(
+                    text = state.message,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.Center),
+                    textAlign = TextAlign.Center,
+                    fontSize = 20.sp,
+                    color = Color.Gray
+                )
+            }
         }
     }
 }

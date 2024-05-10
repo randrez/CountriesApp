@@ -2,6 +2,7 @@ package com.randrez.countriesapp.di
 
 import com.randrez.countriesapp.data.CountryRepositoryImpl
 import com.randrez.countriesapp.domain.repository.CountryRepository
+import com.randrez.database.dao.CountryDao
 import com.randrez.network.ApiService
 import dagger.Module
 import dagger.Provides
@@ -15,6 +16,9 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideCountryRepository(apiService: ApiService): CountryRepository =
-        CountryRepositoryImpl(apiService = apiService)
+    fun provideCountryRepository(
+        apiService: ApiService,
+        countryDao: CountryDao
+    ): CountryRepository =
+        CountryRepositoryImpl(apiService = apiService, countryDao = countryDao)
 }

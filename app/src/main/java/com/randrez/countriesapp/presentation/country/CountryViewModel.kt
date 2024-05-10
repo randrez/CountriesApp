@@ -7,6 +7,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.randrez.countriesapp.domain.model.Country
+import com.randrez.countriesapp.domain.useCase.GetCountryByCode
 import com.randrez.countriesapp.presentation.navigation.Arguments.CODE
 import com.randrez.countriesapp.presentation.navigation.Arguments.IMAGE
 import com.randrez.countriesapp.presentation.navigation.Arguments.TITLE
@@ -20,12 +21,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CountryViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val getCountryByCode: GetCountryByCode
 ) : ViewModel() {
 
     private val _state: MutableState<CountryState> = mutableStateOf(CountryState())
     val state: State<CountryState> = _state
-    protected val _navigationEventFlow: MutableSharedFlow<NavigationEvent> =
+    private val _navigationEventFlow: MutableSharedFlow<NavigationEvent> =
         MutableSharedFlow(replay = 0)
     val navigationEventFlow: SharedFlow<NavigationEvent> = _navigationEventFlow
 
@@ -57,34 +59,10 @@ class CountryViewModel @Inject constructor(
     }
 
     private fun getCountryDetail(code: String) {
-        val countryMock = Country(
-            code = code,
-            name = "Moldova",
-            officialName = "Republic of Moldova",
-            capital = "Chișinău",
-            region = "Europe",
-            population = "2617820",
-            borders = listOf(
-                "ROU",
-                "UKR"
-            )
-        )
-
-        getCountryBorders(country = countryMock)
-    }
-
-    private fun getCountryBorders(country: Country) {
-        /*
-        val borders = listOf(
-            ItemCountry(code = "ROU", official = "Romania", capital = "Bucharest"),
-            ItemCountry(code = "UKR", official = "Ukraine", capital = "Kyiv"),
-            ItemCountry(code = "UKR", official = "Ukraine", capital = "Kyiv"),
-            ItemCountry(code = "UKR", official = "Ukraine", capital = "Kyiv"),
-            ItemCountry(code = "UKR", official = "Ukraine", capital = "Kyiv"),
-            ItemCountry(code = "UKR", official = "Ukraine", capital = "Kyiv")
-        )
-        _state.value =
-            state.value.copy(country = country, borders = borders.toMutableList(), loading = false)*/
+        viewModelScope.launch {
+            val country = getCountryByCode.invoke(code)
+            _state.value = state.value.copy(country = country, loading = false)
+        }
     }
 
     fun onBackStack() {

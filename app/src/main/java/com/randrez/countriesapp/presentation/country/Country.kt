@@ -95,26 +95,26 @@ fun CountryScreen(state: CountryState, obBackStack: () -> Unit) {
                                 LoadImageInDetail(image = state.image.ifEmpty { "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg" })
                             }
                             Spacer(modifier = Modifier.padding(5.dp))
-                            state.country?.let {
+                            state.country?.let {country ->
                                 TextWithTitle(
-                                    title = R.string.name, value = it.name
+                                    title = R.string.name, value = country.name
                                 )
                                 TextWithTitle(
-                                    title = R.string.code, value = it.code
+                                    title = R.string.code, value = country.code
                                 )
                                 TextWithTitle(
-                                    title = R.string.official_name, value = it.officialName
+                                    title = R.string.official_name, value = country.officialName
                                 )
                                 TextWithTitle(
-                                    title = R.string.capital, value = it.capital
+                                    title = R.string.capital, value = country.capital
                                 )
                                 TextWithTitle(
-                                    title = R.string.region, value = it.region
+                                    title = R.string.region, value = country.region
                                 )
                                 TextWithTitle(
-                                    title = R.string.population, value = it.population
+                                    title = R.string.population, value = country.population
                                 )
-                                if (state.borders.isNotEmpty()) {
+                                if (country.borders.isNotEmpty()) {
                                     Divider(
                                         modifier = Modifier
                                             .fillMaxWidth()
@@ -134,7 +134,7 @@ fun CountryScreen(state: CountryState, obBackStack: () -> Unit) {
                                             modifier = Modifier.padding(10.dp)
                                         )
                                     }
-                                    state.borders.forEach { itemCountry ->
+                                    country.borders.forEach { itemCountry ->
                                         CardItemCountry(
                                             fontSizeName = 18,
                                             colorName = Color.White,

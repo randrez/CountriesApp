@@ -8,7 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.randrez.countriesapp.data.resource.Result
 import com.randrez.countriesapp.domain.model.ItemCountry
-import com.randrez.countriesapp.domain.useCase.GetCountriesUseCase
+import com.randrez.countriesapp.domain.useCase.SearchCountry
+import com.randrez.countriesapp.domain.useCase.SetCountries
 import com.randrez.countriesapp.presentation.navigation.NavigationEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -18,34 +19,33 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CountriesViewModel @Inject constructor(
-    private val countriesUseCase: GetCountriesUseCase
+    private val setCountries: SetCountries,
+    private val searchCountry: SearchCountry
 ) : ViewModel() {
 
     private val _state: MutableState<CountriesState> = mutableStateOf(CountriesState())
     val state: State<CountriesState> = _state
     val countriesFiltered: MutableList<ItemCountry> = mutableStateListOf()
-    val countries: MutableList<ItemCountry> = mutableStateListOf()
 
-    protected val _navigationEventFlow: MutableSharedFlow<NavigationEvent> =
+    private val _navigationEventFlow: MutableSharedFlow<NavigationEvent> =
         MutableSharedFlow(replay = 0)
     val navigationEventFlow: SharedFlow<NavigationEvent> = _navigationEventFlow
 
     init {
-        viewModelScope.launch {
-            getCountries()
-        }
+        setCountriesLocal()
     }
 
-    private suspend fun getCountries() {
-        countries.clear()
-        countriesFiltered.clear()
-        when (val result = countriesUseCase.invoke()) {
-            is Result.Error -> {}
-            is Result.Success -> {
-                result.data?.let { itemCountryList ->
-                    _state.value = state.value.copy(loading = false)
-                    countries.addAll(itemCountryList)
-                    countriesFiltered.addAll(itemCountryList)
+    private fun setCountriesLocal() {
+        viewModelScope.launch {
+            when (val result = setCountries.invoke()) {
+                is Result.Error -> {
+                    result.message?.let {
+                        _state.value = state.value.copy(loading = false, message = it)
+                    }
+                }
+
+                is Result.Success -> {
+                    filterCountries()
                 }
             }
         }
@@ -66,17 +66,10 @@ class CountriesViewModel @Inject constructor(
             }
 
             is CountriesEventUI.OnSearchQueryCountry -> {
-                val filters = countries.filter {
-                    it.official.lowercase().contains(eventUI.value) || it.name.lowercase()
-                        .contains(eventUI.value)
+                _state.value = state.value.copy(searchCountry = eventUI.value, loading = true)
+                viewModelScope.launch {
+                    filterCountries()
                 }
-                countriesFiltered.clear()
-                if (filters.isNotEmpty())
-                    countriesFiltered.addAll(filters)
-                else
-                    countriesFiltered.addAll(countries)
-
-                _state.value = state.value.copy(searchQueryCountry = eventUI.value)
             }
 
             is CountriesEventUI.OnClearSearchQueryCountry -> {
@@ -86,8 +79,27 @@ class CountriesViewModel @Inject constructor(
     }
 
     fun clearSearch() {
-        _state.value = state.value.copy(searchQueryCountry = "")
+        _state.value = state.value.copy(searchCountry = "", loading = true)
+        viewModelScope.launch {
+            filterCountries()
+        }
+    }
+
+    private suspend fun filterCountries() {
         countriesFiltered.clear()
-        countriesFiltered.addAll(countries)
+        when (val result = searchCountry.invoke(state.value.searchCountry)) {
+            is Result.Error -> {
+                result.message?.let {
+                    _state.value = state.value.copy(loading = false, message = it)
+                }
+            }
+
+            is Result.Success -> {
+                _state.value = state.value.copy(loading = false)
+                result.data?.let {
+                    countriesFiltered.addAll(it)
+                }
+            }
+        }
     }
 }
