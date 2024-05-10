@@ -9,4 +9,9 @@
     <string name="region">Continente:</string>
     <string name="borders">Paises que limita</string>
     <string name="code">Codigo:</string>
+    <string name="not_found_countries_service">El servicio no retorno paises</string>
+    <string name="error_save_countries_data_base">Error al almacenar los paises</string>
+    <string name="not_found_countries">No se encontraron paises</string>
+    <string name="code_is_empty">El codigo esta vacio intenta de nuevo buscar el pais en la vista anterior</string>
+    <string name="not_found_country">No se encontro el pais</string>
 </resources>

@@ -18,8 +18,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.randrez.countriesapp.R
 import com.randrez.countriesapp.domain.model.ItemCountry
-import com.randrez.countriesapp.presentation.CardItemCountry
+import com.randrez.countriesapp.presentation.commons.CardItemCountry
+import com.randrez.countriesapp.presentation.commons.Warning
 import com.randrez.countriesapp.presentation.countries.CountriesEventUI.OnBackStack
+import com.randrez.countriesapp.presentation.countries.CountriesEventUI.OnClearSearchQueryCountry
+import com.randrez.countriesapp.presentation.countries.CountriesEventUI.OnSearchQueryCountry
 import com.randrez.countriesapp.presentation.countries.CountriesEventUI.OnSelectCountry
 
 @Composable
@@ -36,11 +39,15 @@ fun CountriesScreen(
             SearchCountry(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 10.dp, vertical = 5.dp),
-                searchQueryCountry = "",
+                    .padding(horizontal = 15.dp, vertical = 10.dp),
+                searchQueryCountry = state.searchCountry,
                 placeholder = stringResource(id = R.string.search_country),
-                onSearchQueryCountry = {},
-                onClearSearchQueryCountry = {}
+                onSearchQueryCountry = {
+                    onEventUI(OnSearchQueryCountry(it))
+                },
+                onClearSearchQueryCountry = {
+                    onEventUI(OnClearSearchQueryCountry)
+                }
             )
         }
     ) { paddingValues ->
@@ -55,10 +62,15 @@ fun CountriesScreen(
                         .size(80.dp)
                         .align(Alignment.Center)
                 )
-            else
+            else if (countries.isNotEmpty()) {
                 CountryList(countries) {
                     onEventUI(OnSelectCountry(it))
                 }
+            } else {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Warning(state.message)
+                }
+            }
         }
     }
 }
@@ -68,7 +80,7 @@ private fun CountryList(countries: List<ItemCountry>, onSelectCountryCode: (Item
     LazyColumn {
         items(countries) { item ->
             CardItemCountry(
-                name = item.name,
+                name = item.official,
                 capital = item.capital,
                 image = item.image,
                 onSelectCountry = {

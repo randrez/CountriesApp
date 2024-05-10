@@ -1,6 +1,6 @@
 [versions]
 agp = "8.3.0"
-kotlin = "1.9.0"
+kotlin = "1.8.10"
 coreKtx = "1.13.0"
 junit = "4.13.2"
 junitVersion = "1.1.5"
@@ -19,10 +19,9 @@ lifecycle = "2.6.2"
 lifecycleExtensions = "2.2.0"
 coroutines = "1.7.1"
 hilt = "2.44"
-hiltNavigationCompose = "1.1.0"
-hiltTesting = "2.42"
-uiTestManifest = "1.1.1"
-kapt = "1.9.0"
+hiltNavigationCompose = "1.0.0"
+hiltTesting = "2.38.1"
+uiTestManifest = "1.3.1"
 room = "2.6.1"
 mockk = "1.12.2"
 appcompat = "1.6.1"
@@ -88,7 +87,8 @@ material = { group = "com.google.android.material", name = "material", version.r
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-jetbrainsKotlinKapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kapt" }
+jetbrainsKotlinKapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 comGoogledDaggerHiltPlugin = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+
 
