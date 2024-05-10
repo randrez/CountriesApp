@@ -35,10 +35,11 @@ fun RootNavGraph(navController: NavHostController) {
                         }
 
                         is OnNavigateCountry -> {
-                            val (code, name, capital, image) = event.itemCountry
-                            image?.let {
+                            event.itemCountry.image?.let { image ->
                                 val encodedUrl = encodeImage(image)
-                                navController.navigate(route = "${Country.route}/${code}/${name}/${encodedUrl}")
+                                navController.navigate(route = "${Country.route}/${event.itemCountry.code}/${event.itemCountry.name}/${encodedUrl}")
+                                if (state.searchCountry.isNotBlank())
+                                    viewModel.clearSearch()
                             }
                         }
                     }

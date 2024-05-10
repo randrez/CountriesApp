@@ -7,5 +7,5 @@ data class Country(
     val region: String,
     val population:String,
     val capital: String,
-    val borders: List<String>
+    val borders: List<ItemCountry>
 )
