@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.randrez.countriesapp.domain.model.Country
+import com.randrez.countriesapp.data.resource.Result
 import com.randrez.countriesapp.domain.useCase.GetCountryByCode
 import com.randrez.countriesapp.presentation.navigation.Arguments.CODE
 import com.randrez.countriesapp.presentation.navigation.Arguments.IMAGE
@@ -53,15 +53,23 @@ class CountryViewModel @Inject constructor(
         }
 
         state.value.run {
-            if (code.isNotBlank())
-                getCountryDetail(code)
+            getCountryDetail(code)
         }
     }
 
     private fun getCountryDetail(code: String) {
         viewModelScope.launch {
-            val country = getCountryByCode.invoke(code)
-            _state.value = state.value.copy(country = country, loading = false)
+            when (val result = getCountryByCode.invoke(code)) {
+                is Result.Error -> {
+                    result.message?.let {
+                        _state.value = state.value.copy(message = it, loading = false)
+                    }
+                }
+
+                is Result.Success -> {
+                    _state.value = state.value.copy(country = result.data, loading = false)
+                }
+            }
         }
     }
 

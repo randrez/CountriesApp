@@ -17,12 +17,13 @@ class SetCountries(
             val countriesDTO = countryRepository.getAllCountryApi()
             if (countriesDTO.isEmpty()) {
                 return Result.Error(context.getString(R.string.not_found_countries_service))
+            }else{
+                val success = countryRepository.insertList(countriesDTO.toListCountryEntity())
+                if (success.contains(0)) {
+                    return Result.Error(context.getString(R.string.error_save_countries_data_base))
+                }
+                return Result.Success(success.isNotEmpty())
             }
-            val success = countryRepository.insertList(countriesDTO.toListCountryEntity())
-            if (success.contains(0)) {
-                return Result.Error(context.getString(R.string.error_save_countries_data_base))
-            }
-            return Result.Success(success.isNotEmpty())
         } else {
             return Result.Success(count > 0)
         }

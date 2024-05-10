@@ -7,5 +7,6 @@ data class CountryState(
     val loading: Boolean = true,
     val title: String = "",
     val image: String = "",
-    val code: String = ""
+    val code: String = "",
+    val message: String = ""
 )

@@ -1,4 +1,4 @@
-package com.randrez.countriesapp.presentation
+package com.randrez.countriesapp.presentation.commons
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

@@ -29,6 +29,8 @@ object ViewModelModule {
     ) = SearchCountry(context = context, countryRepository = countryRepository)
 
     @Provides
-    fun provideGetCountryByCode(countryRepository: CountryRepository) =
-        GetCountryByCode(countryRepository = countryRepository)
+    fun provideGetCountryByCode(
+        @ApplicationContext context: Context,
+        countryRepository: CountryRepository
+    ) = GetCountryByCode(context = context, countryRepository = countryRepository)
 }
