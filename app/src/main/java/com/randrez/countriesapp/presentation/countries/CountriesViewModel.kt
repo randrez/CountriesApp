@@ -35,7 +35,7 @@ class CountriesViewModel @Inject constructor(
         setCountriesLocal()
     }
 
-    private fun setCountriesLocal() {
+    fun setCountriesLocal() {
         viewModelScope.launch {
             when (val result = setCountries.invoke()) {
                 is Result.Error -> {
@@ -85,7 +85,7 @@ class CountriesViewModel @Inject constructor(
         }
     }
 
-    private suspend fun filterCountries() {
+    suspend fun filterCountries() {
         countriesFiltered.clear()
         when (val result = searchCountry.invoke(state.value.searchCountry)) {
             is Result.Error -> {
