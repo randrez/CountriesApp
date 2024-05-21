@@ -1,7 +1,7 @@
 package com.randrez.countriesapp.domain.useCase
 
 import android.content.Context
-import com.randrez.countriesapp.data.resource.Result
+import com.randrez.countriesapp.base.DataState
 import com.randrez.countriesapp.domain.repository.CountryRepository
 import com.randrez.countriesapp.mocks.mockCountryEntity
 import com.randrez.countriesapp.mocks.mockListCountryEntity
@@ -42,7 +42,7 @@ class GetCountryByCodeTest {
             val response = getCountryByCode(code)
 
             //Then
-            assert(response is Result.Success)
+            assert(response is DataState.Success)
         }
 
     @Test
@@ -56,7 +56,7 @@ class GetCountryByCodeTest {
             val response = getCountryByCode("")
 
             //Then
-            assert(response is Result.Error)
+            assert(response is DataState.Error)
         }
 
     @Test
@@ -71,7 +71,7 @@ class GetCountryByCodeTest {
             val response = getCountryByCode(code)
 
             //Then
-            assert(response is Result.Success)
+            assert(response is DataState.Success)
         }
 
 
@@ -87,6 +87,6 @@ class GetCountryByCodeTest {
             val response = getCountryByCode(code)
 
             //Then
-            assert(response is Result.Error)
+            assert(response is DataState.Error)
         }
 }

@@ -1,7 +1,7 @@
 package com.randrez.countriesapp.domain.useCase
 
 import android.content.Context
-import com.randrez.countriesapp.data.resource.Result
+import com.randrez.countriesapp.base.DataState
 import com.randrez.countriesapp.domain.repository.CountryRepository
 import com.randrez.countriesapp.mocks.mockListCountryEntity
 import io.mockk.MockKAnnotations
@@ -34,10 +34,12 @@ class SearchCountryTest {
         coEvery { countryRepository.getCountries() } returns mockListCountryEntity()
 
         //When
+        val countries = countryRepository.getCountries()
         val response = searchCountry("")
 
         //Then
-        assert(response is Result.Success)
+        assert(countries.size == mockListCountryEntity().size)
+        assert(response is DataState.Success)
     }
 
     @Test
@@ -50,7 +52,7 @@ class SearchCountryTest {
         val response = searchCountry("")
 
         //Then
-        assert(response is Result.Error)
+        assert(response is DataState.Error)
     }
 
     @Test
@@ -60,10 +62,12 @@ class SearchCountryTest {
         coEvery { countryRepository.searchCountry(query) } returns mockListCountryEntity()
 
         //When
+        val countries = countryRepository.searchCountry(query)
         val response = searchCountry(query)
 
         //Then
-        assert(response is Result.Success)
+        assert(countries.size == mockListCountryEntity().size)
+        assert(response is DataState.Success)
     }
 
     @Test
@@ -75,8 +79,11 @@ class SearchCountryTest {
 
         //When
         val response = searchCountry(query)
-
+        val countries  = countryRepository.searchCountry(query)
         //Then
-        assert(response is Result.Error)
+        assert(countries.isEmpty())
+        assert(response is DataState.Error)
     }
+
+
 }

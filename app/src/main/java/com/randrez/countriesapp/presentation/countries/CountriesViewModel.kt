@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.randrez.countriesapp.data.resource.Result
+import com.randrez.countriesapp.base.DataState
 import com.randrez.countriesapp.domain.model.ItemCountry
 import com.randrez.countriesapp.domain.useCase.SearchCountry
 import com.randrez.countriesapp.domain.useCase.SetCountries
@@ -38,13 +38,13 @@ class CountriesViewModel @Inject constructor(
     fun setCountriesLocal() {
         viewModelScope.launch {
             when (val result = setCountries.invoke()) {
-                is Result.Error -> {
+                is DataState.Error -> {
                     result.message?.let {
                         _state.value = state.value.copy(loading = false, message = it)
                     }
                 }
 
-                is Result.Success -> {
+                is DataState.Success -> {
                     filterCountries()
                 }
             }
@@ -54,15 +54,11 @@ class CountriesViewModel @Inject constructor(
     fun onEventUI(eventUI: CountriesEventUI) {
         when (eventUI) {
             is CountriesEventUI.OnSelectCountry -> {
-                viewModelScope.launch {
-                    _navigationEventFlow.emit(NavigationEvent.OnNavigateCountry(eventUI.itemCountry))
-                }
+                navigationEvent(NavigationEvent.OnNavigateCountry(eventUI.itemCountry))
             }
 
             is CountriesEventUI.OnBackStack -> {
-                viewModelScope.launch {
-                    _navigationEventFlow.emit(NavigationEvent.OnBackStack)
-                }
+                navigationEvent(NavigationEvent.OnBackStack)
             }
 
             is CountriesEventUI.OnSearchQueryCountry -> {
@@ -85,16 +81,22 @@ class CountriesViewModel @Inject constructor(
         }
     }
 
+    fun navigationEvent(navigationEvent: NavigationEvent) {
+        viewModelScope.launch {
+            _navigationEventFlow.emit(navigationEvent)
+        }
+    }
+
     suspend fun filterCountries() {
         countriesFiltered.clear()
         when (val result = searchCountry.invoke(state.value.searchCountry)) {
-            is Result.Error -> {
+            is DataState.Error -> {
                 result.message?.let {
                     _state.value = state.value.copy(loading = false, message = it)
                 }
             }
 
-            is Result.Success -> {
+            is DataState.Success -> {
                 _state.value = state.value.copy(loading = false)
                 result.data?.let {
                     countriesFiltered.addAll(it)
