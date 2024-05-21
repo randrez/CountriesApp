@@ -1,7 +1,7 @@
 package com.randrez.countriesapp.domain.useCase
 
 import android.content.Context
-import com.randrez.countriesapp.data.resource.Result
+import com.randrez.countriesapp.base.DataState
 import com.randrez.countriesapp.domain.repository.CountryRepository
 import com.randrez.countriesapp.mocks.mockListCountries
 import com.randrez.countriesapp.mocks.mockListCountryEntity
@@ -45,7 +45,7 @@ class SetCountriesTest {
             //Then
             coVerify(exactly = 1) { countryRepository.getAllCountryApi() }
             coVerify(exactly = 1) { countryRepository.insertList(mockListCountryEntity()) }
-            assert(response is Result.Success)
+            assert(response is DataState.Success)
         }
 
     @Test
@@ -65,7 +65,7 @@ class SetCountriesTest {
             //Then
             coVerify(exactly = 1) { countryRepository.getAllCountryApi() }
             coVerify(exactly = 1) { countryRepository.insertList(mockListCountryEntity()) }
-            assert(response is Result.Error)
+            assert(response is DataState.Error)
         }
 
     @Test
@@ -82,7 +82,7 @@ class SetCountriesTest {
 
             //Then
             coVerify(exactly = 1) { countryRepository.getAllCountryApi() }
-            assert(response is Result.Error)
+            assert(response is DataState.Error)
         }
 
     @Test
@@ -95,6 +95,6 @@ class SetCountriesTest {
             val response = setCountries()
 
             //Then
-            assert(response is Result.Success)
+            assert(response is DataState.Success)
         }
 }
