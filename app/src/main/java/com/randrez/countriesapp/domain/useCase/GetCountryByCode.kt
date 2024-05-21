@@ -2,7 +2,7 @@ package com.randrez.countriesapp.domain.useCase
 
 import android.content.Context
 import com.randrez.countriesapp.R
-import com.randrez.countriesapp.data.resource.Result
+import com.randrez.countriesapp.base.DataState
 import com.randrez.countriesapp.domain.mapper.toCountry
 import com.randrez.countriesapp.domain.mapper.toListItemCountry
 import com.randrez.countriesapp.domain.model.Country
@@ -13,16 +13,16 @@ class GetCountryByCode(
     private val countryRepository: CountryRepository
 ) {
 
-    suspend operator fun invoke(code: String): Result<Country> =
+    suspend operator fun invoke(code: String): DataState<Country> =
         if (code.isNotBlank()) {
             countryRepository.getCountryByCode(code)?.let {
                 val countriesEntity =
                     countryRepository.getCountriesByCodes(it.borders)
                 if (countriesEntity.isNotEmpty())
-                    Result.Success(it.toCountry(countriesEntity.toListItemCountry()))
+                    DataState.Success(it.toCountry(countriesEntity.toListItemCountry()))
                 else
-                    Result.Success(it.toCountry(emptyList()))
-            } ?: Result.Error(context.getString(R.string.not_found_country))
+                    DataState.Success(it.toCountry(emptyList()))
+            } ?: DataState.Error(context.getString(R.string.not_found_country))
         } else
-            Result.Error(context.getString(R.string.code_is_empty))
+            DataState.Error(context.getString(R.string.code_is_empty))
 }
