@@ -80,6 +80,7 @@ class SearchCountryTest {
         //When
         val response = searchCountry(query)
         val countries  = countryRepository.searchCountry(query)
+
         //Then
         assert(countries.isEmpty())
         assert(response is DataState.Error)
