@@ -57,7 +57,7 @@ class CountryViewModel @Inject constructor(
         }
     }
 
-    private fun getCountryDetail(code: String) {
+    fun getCountryDetail(code: String) {
         viewModelScope.launch {
             when (val result = getCountryByCode.invoke(code)) {
                 is DataState.Error -> {
