@@ -1,7 +1,9 @@
 package com.randrez.countriesapp.mocks
 
+import com.randrez.countriesapp.domain.mapper.toCountry
 import com.randrez.countriesapp.domain.mapper.toCountryEntity
 import com.randrez.countriesapp.domain.mapper.toListItemCountry
+import com.randrez.countriesapp.domain.model.Country
 import com.randrez.countriesapp.domain.model.ItemCountry
 import com.randrez.database.entity.CountryEntity
 import com.randrez.network.response.CountryDTO
@@ -39,3 +41,6 @@ fun mockCountryEntity(): CountryEntity =
 
 fun mockListItemCountry():List<ItemCountry> =
     mockListCountryEntity().toListItemCountry()
+
+fun mockCountry(items:List<ItemCountry>):Country =
+    mockCountryEntity().toCountry(items)
