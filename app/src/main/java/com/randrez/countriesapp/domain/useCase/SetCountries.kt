@@ -13,19 +13,15 @@ class SetCountries(
 
     suspend operator fun invoke(): DataState<Boolean> {
         val count = countryRepository.countCountries()
-        if (count == 0) {
-            val countriesDTO = countryRepository.getAllCountryApi()
-            if (countriesDTO.isEmpty()) {
-                return DataState.Error(context.getString(R.string.not_found_countries_service))
-            } else {
-                val success = countryRepository.insertList(countriesDTO.toListCountryEntity())
-                if (success.contains(0)) {
-                    return DataState.Error(context.getString(R.string.error_save_countries_data_base))
-                }
-            }
-            return DataState.Success(true)
+        val countriesDTO = countryRepository.getAllCountryApi()
+        if (countriesDTO.isEmpty()) {
+            return DataState.Error(context.getString(R.string.not_found_countries_service))
         } else {
-            return DataState.Success(true)
+            val success = countryRepository.insertList(countriesDTO.toListCountryEntity())
+            if (success.contains(0)) {
+                return DataState.Error(context.getString(R.string.error_save_countries_data_base))
+            }
         }
+        return DataState.Success(count == 0)
     }
 }
